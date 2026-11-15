@@ -275,13 +275,13 @@ def checkNameCapitalization(recordDict):
 #validateDegreeTypes() - get recordDict from validateRecordDict() and checks for valid degree types
 def validateDegreeTypes(recordDict):
     #see if the recipeints degree type is in the recognized master list of degree types
-  while recordDict['degreeType'] not in DEGREE_TYPE['Bachelor']: 
+    #if the degree type input is not in any of dict lists (which is why we use AND here), then we enter the loop
+  while recordDict['degreeType'] not in DEGREE_TYPE['Bachelor'] and recordDict['degreeType'] not in DEGREE_TYPE['Associate'] and recordDict['degreeType'] not in DEGREE_TYPE['Certificate']: 
       print(f"{recordDict['degreeType']} is not currently offered at Eastern Arizona College.\n") 
       print(f'Please choose one of the following:\n{DEGREE_TYPE}')
       recordDict['degreeType'] = input('Update Degree Type: ')
           
   return recordDict
-
 
 
 #validateHonorTypes() - checks for valid honor types
