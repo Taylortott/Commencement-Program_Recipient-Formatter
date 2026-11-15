@@ -1,0 +1,76 @@
+#program to recieve, sort, and format graduate recipients for a commencement program based on
+#1. Degreee Level - Bachelor > Associate > Certificate
+#2. Degree Type - Alphabetized
+#3. Denote Honors recieved per recipient
+        #no honors
+        #honors
+        #high honors
+        #highest honors
+#4. Format first, middle, last into full name
+#5. Alphabetize reipient list by last name
+
+#main function - introduce program
+def main():
+    print('--- Commencement Program | Recipient Formatter --- ')
+    
+    #get list of recipients
+    get_recipient_records()
+    
+    #start sorting and formatiing the list
+    format_list()
+
+#get_recipients function - prompt the user to enter list of recipients
+
+def get_recipient_records():
+    
+    #dislpay instructions to user
+    dispaly_input_instructions()
+    
+    #prompt user to enter recipient records
+    
+    recipientList = input('Enter recipient records:\n\n')
+    
+# give_program_instructions function - give intructions to the user on how to enter and format the input
+def dispaly_input_instructions():
+    
+    #If the instructions have to be changed for clarity and usability, I'd rather edit it in it's only function block 
+    #than track it down in another function that has other code for a different task
+    
+    print('')
+    print('Instructions')
+    print('1. Enter one recipient record per line.')
+    print('2. Enter the different fields in the following order:')
+    print('\tFirst Name\tMiddle Name\tLast Name\tDegree\tHonors Recieved')
+    print('3. Seperate each field using a tab.')
+    print('4. Leave the middle name field blank if the recipient has none.')
+    print('5. Press enter when all recipeint records have been entered to begin formatting.')
+    print('')
+
+#format_list function - begins the formatting and sorting by utilizing nested loops
+def format_list():
+    #use nested loops to go level by level, like a clock
+    
+    #outer loop - hour hand = degree level
+               # - minute hand = degree type
+    sort_degree_headings()
+    #inner loop - second hand - honor symbol + recipeint name 
+    organize_recipients()
+
+
+#sort_degree_headings function - sorts the degree headings
+def sort_degree_headings():
+    
+    #get the degree headings to begin sort
+    get_degree_headings()
+
+#get_dregree_headings function - recieve degree codes, convert codes into 
+                                #full headings, and return headings
+def get_degree_headings():
+    pass
+
+#organize_recipients function - recieve the recipient list and handle grouping and ordering 
+def organize_recipients():
+    pass
+#run the program / call main
+
+main()
