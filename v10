@@ -1,6 +1,6 @@
 #Honor Type Symbol Constants
 
-NO_HONORS = ''
+NO_HONORS = ' '
 HONORS = '*'
 HIGH_HONORS ='†'
 HIGHEST_HONORS = '‡'
@@ -224,26 +224,47 @@ def formatList(records):
                     degreeRecipients.append(recipient)
 
             #got all of the recipients that match the criteria? NOW sort them by last name
-            #(sortRecipients() ahould be put here in the future as we will need to sort by first then middle in edge cases)
-            sortedDegreeRecipients = sorted(degreeRecipients, key = lambda d: d['last'])
+            sortedDegreeRecipients = sortRecipientList(degreeRecipients)
 
             #inner loop 2.2 = add the sorted list of selected recipients to the final formatted list ONCE
             for recipient in sortedDegreeRecipients:
+                #get the full formatted name for each recipient
+                recipient = (f'{getHonorSymbol(recipient)} {getFullName(recipient)}')
+                
+                #add that formatted name to the master formatted list
                 formattedList.append(f'\t{recipient}')
-                  
+    getUniqueDegreeTypes(records)              
     #after ALL loops have concluded, return list to main()          
     return formattedList
 
 
 #sortDegreeHeadings function - receive multiple degree types and produce a sorted unique list with no duplicates
-def getUniqueDegreeTypes(list):
+def getUniqueDegreeTypes(recipientList):
     
-    #make (an) empty list(s)
-        #m -> Master
-        #b -> Bachelor
-        #a -> associate
-        #c -> certificate
+    #make empty lists and dictionaries to fill
+    
+    #master dictionary list
+    uniqueDegreeList = {}
+    
+    #empty degree sub-dictionary lists
+    certificates = {'certificate':[]}
+    associateDegrees = {'associate':[]}
+    bachelorDegrees = {'bachelor': []}
+    masterDegrees = {'master': []}
+    
+
     #identify the degree types and add to list(s)
+    for recipient in recipientList:
+        if recipient['degreeType'][0] == 'a' or recipient['degreeType'][0] == 'A':
+            associateDegrees['associate'].update('degreeType')
+    #eliminate duplicates
+    uniqueAssociateDegrees = associateDegrees.set()     
+    #sort the lists
+    sortedUniqueAssociateDegrees = sorted(uniqueAssociateDegrees)
+    
+    #test print
+    print (sortedUniqueAssociateDegrees)
+        
     #eliminate duplicates
     #sort list(s) alphabetically
     #return sorted unique list to formatlist() to use in runs
@@ -269,7 +290,7 @@ def getFullDegreeHeading(degreeType):
     elif degreeType == 'AAS':
         heading = 'Associate of Applied Science'
         return heading
-    elif degreeType == 'ABus':
+    elif degreeType == 'ABus' or degreeType == 'Abus':
         heading = 'Associate of Business'
         return heading
     elif degreeType == 'AGS':
@@ -288,25 +309,43 @@ def getFullDegreeHeading(degreeType):
     else:
         print('Degree Type Not Recognized')
 
+#sortSDegreeRecipients - Sort recipients in a list by last name and then return the list
+def sortRecipientList(degreeRecipients):
+    
+    #sort the recipients in the dictioanry list by last name
+    sortedDegreeRecipients = sorted(degreeRecipients, key = lambda d: d['last'])
+    
+    return sortedDegreeRecipients
+
 
 #fullName function - concatenate first, middle, and last name together
-def fullName(record):
+def getFullName(record):
     
     #concatenate first, middle, and last name into a full name
-    if record['middle'] == '':
-        fullName = record['first'] + '' + record['last']
+    if record['middle'] == ' ':
+        fullName = record['first'] + ' ' + record['last']
     else:
-        fullName = record['first'] + '' + record['middle'] + '' + record['last']
+        fullName = record['first'] + ' ' + record['middle'] + ' ' + record['last']
     
-    # return fullName
-    pass
+    return fullName
 
 
 #getHonorSymbol function - determine what honor symbol the recipient gets
-def getHonorSymbol(honorType):
+def getHonorSymbol(recipient):
+    
     #find what honor symbol matches the given honor type
+    
+    if recipient['honorType'] == 'No Honors' or recipient['honorType'] == 'no honors':
+        honorType = NO_HONORS
+    elif recipient['honorType'] == 'Honors' or recipient['honorType'] == 'honors':
+        honorType = HONORS
+    elif recipient['honorType'] == 'High Honors' or recipient['honorType'] == 'high honors':
+        honorType = HIGH_HONORS
+    elif recipient['honorType'] == 'Highest Honors' or recipient['honorType'] == 'highest honors':
+        honorType = HIGHEST_HONORS
+
     #return appropriate honor symbol
-    pass
+    return honorType
     
     
 #run the program / call main
