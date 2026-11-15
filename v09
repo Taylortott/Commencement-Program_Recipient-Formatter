@@ -1,0 +1,315 @@
+#Honor Type Symbol Constants
+
+NO_HONORS = ''
+HONORS = '*'
+HIGH_HONORS ='†'
+HIGHEST_HONORS = '‡'
+
+#how many fields each record must have
+RECORD_FIELDS_COUNT = 5
+
+#degree level constants so if we ever need to add a new degree level or degree type
+# we can do it in one place
+
+DEGREE_LEVEL = ['Bachelor', 'Associate', 'Certificate']
+DEGREE_TYPE = {'Bachelor': ['BA', 'BS'], 
+               'Associate': ['AA', 'AAS','ABus', 'AGS','AS'],
+               'Certificate': ['Certificate']}
+
+
+#main function - run program
+def main():
+    displayTitle()
+    
+    #control the menu = 'direct traffic'
+    #set the initial start variable condition value to 0 so it will always run when it first boots up
+    choice = '0'
+    
+    #determine if the user wants to quit the program
+    while choice != '2':
+        #display the menu and get a return value for choice
+        choice = displayMenu()
+        if choice == '1':
+            #start collecting recipient records and return the list
+            recipientList = getRecipientRecords()
+            #pass the list on to be processed and refformatted
+            formattedRecipientList = formatList(recipientList)
+            
+            #print the reformatted list
+            for line in formattedRecipientList:
+                print(line)
+            
+    print("\nThanks for using the Recipient Formatter. \nHave a good day!\n")
+
+
+#displayTitle Function - introduces the program
+def displayTitle():
+    
+    #display title
+    print('--- Commencement Program | Recipient Formatter --- ')
+    print('')
+
+    #display mini intro
+    print('Run recipient records through the program and get a reformatted list.')
+    print('')
+
+
+#displayMenu Function - display the menu options and return the user's choice
+def displayMenu():
+    
+    print('MENU SELECT')
+    print('1. Begin a New List')
+    print('2. End Program\n')
+    
+    #prompt user
+    choice = (input('Choose an Option (1 or 2): '))
+    
+    # validate input
+    
+    while choice != '1' and choice != '2':
+        print("\nThat isn't a menu option.")
+        choice = input('Choose either 1 or 2: ')
+
+    #return value to main()
+    return choice
+
+
+#getRecipientRecords function - prompt user to enter recipient records 
+def getRecipientRecords():
+    
+    #display input instructions to user   
+    displayInstructions()
+
+    #set up an empty list to fill with individual records
+    #items will be added to this after records have been converted into dictionaries
+    recordList = []
+        
+    #prompt user to enter recipient records
+
+    #mechanism for accepting multiline input
+    while True:
+
+        #prompt user
+        record = input('')
+
+        #terminate condition
+        if record == 'END':
+            break
+
+        #split the record into 5 list elements
+        record = record.split('\t')
+        
+        #validate the records field length and store the returned result
+        record = validateListLen(record)
+
+        #convert list into dictionary
+        recipientDict = dict(
+            #assign keys to list indexes
+            first= record[0], 
+            middle= record[1], 
+            last= record[2], 
+            degreeType= record[3], 
+            honorType= record[4] )
+        
+        #validate the format for each dict key
+        validateRecordDict(recipientDict)
+        
+        #Did the dict pass the validation gauntlet?
+        #add that dictionary to the master list
+        recordList.append(recipientDict)
+
+    #pass the final list back to main()
+    return recordList
+
+
+# give_program_instructions function - give instructions to the user on how to enter and format the input
+def displayInstructions():
+    print('')
+    print('Instructions')
+    print('1. Enter one recipient record per line.')
+    print('2. Enter the different fields in the following order:')
+    print('\tFirst Name\tMiddle Name\tLast Name\tDegree\tHonors Received')
+    print('3. Separate each field using a tab.')
+    print('4. Leave the middle name field blank if the recipient has none.')
+    print('5. Press enter when all recipient records have been put in to begin formatting.')
+    print('')
+    print(f"Paste Recipient Records Below. Type 'END' to Finish: ")
+    print('')
+
+
+#validateRecordListLen - validate the length of each list
+def validateListLen(list):
+
+    #validate list length
+    while len(list) != RECORD_FIELDS_COUNT:
+        
+        #test for excess fields
+        
+        if len(list) > RECORD_FIELDS_COUNT:
+            #display error message
+            print (f'{list} has more than {RECORD_FIELDS_COUNT} fields.\n Please reenter the record to have {RECORD_FIELDS_COUNT} fields, each seperated by a tab.\n')
+           
+            #prompt user for corrected record
+            list = input(f'Corrected Record: ')
+
+            #resplit for the recount
+            list = list.split('\t')
+            
+        #test for not enough fields
+    
+        elif len(list) < RECORD_FIELDS_COUNT:
+            
+            #display error message
+            print (f'{list} has less than {RECORD_FIELDS_COUNT} fields.\n Please reenter the record to have {RECORD_FIELDS_COUNT} fields, each separated by a tab:')
+           
+            #prompt user for corrected record
+            list = input(f'Corrected Record: ')
+           
+            #resplit for the recount
+            list = list.split('\t')
+
+    #once the list has the correct amount of fields, return the list
+    return list
+    
+
+#validateRecordDict function - validate each element of the record dict key and allow for correction
+def validateRecordDict(recordDict):
+     
+    #validate names
+    while recordDict['first'][0].isupper() == False:
+        #display error message
+        print(f'Error: The first name for {recordDict} is not capitalized. Please correct this: ')
+        #let the user correct the input
+        recordDict['first'] = input('')
+    return recordDict
+    #validate names
+    #validate degrees
+    #validate honor type
+
+
+#formatList function - begins formatting and sorting by utilizing nested loops
+def formatList(records):
+    
+    #create an empty list
+    formattedList =[]
+   
+    #use nested loops to sort by
+        #degree level
+            #degree type
+                #recipients
+                    #find recipients that match degree type
+                    #sort those recipients
+                    #print those recipients
+    
+    #outer loop - degree level --  ex. Bachelor
+    #level automatically has zero value, it changes value by going through the degree level constant list
+    for level in DEGREE_LEVEL:
+
+        #inner loop 1 = degree type -- ex. BS
+        #the value that the level variable gained in the outer loop is passed as a key to the degree type constant dictionary of lists in inner loop 1
+        #the variable degreeType automatically has no value, it changes value by going through the degree types stored in the degree types constant dictionary lists accessed through the level variable key
+        for degreeType in DEGREE_TYPE[level]:
+            #pass degreeType to get the proper heading and store the returned value as heading
+            heading = getFullDegreeHeading(degreeType)
+            formattedList.append(heading)
+
+            #create an empty list of recipients for the current degree type, which will be filled in the next loop
+            degreeRecipients = []
+
+            #inner loop 2.1 = get the recipients
+            for recipient in records:
+                #scan through the list to find items that match the criteria given from Inner Loop 1's degreeType variable
+                if recipient.get('degreeType') == degreeType:
+                    #add matches to the current degree's list
+                    degreeRecipients.append(recipient)
+
+            #got all of the recipients that match the criteria? NOW sort them by last name
+            #(sortRecipients() ahould be put here in the future as we will need to sort by first then middle in edge cases)
+            sortedDegreeRecipients = sorted(degreeRecipients, key = lambda d: d['last'])
+
+            #inner loop 2.2 = add the sorted list of selected recipients to the final formatted list ONCE
+            for recipient in sortedDegreeRecipients:
+                formattedList.append(f'\t{recipient}')
+                  
+    #after ALL loops have concluded, return list to main()          
+    return formattedList
+
+
+#sortDegreeHeadings function - receive multiple degree types and produce a sorted unique list with no duplicates
+def getUniqueDegreeTypes(list):
+    
+    #make (an) empty list(s)
+        #m -> Master
+        #b -> Bachelor
+        #a -> associate
+        #c -> certificate
+    #identify the degree types and add to list(s)
+    #eliminate duplicates
+    #sort list(s) alphabetically
+    #return sorted unique list to formatlist() to use in runs
+    #so that only provided values are used instead of all possible values
+    pass
+
+
+#getFullDegreeHeading function - receive one degree type and convert it
+def getFullDegreeHeading(degreeType):
+
+    #bachelor's ['BA', 'BS']
+    if degreeType == 'BA':
+        heading = 'Bachelor of Arts'
+        return heading
+    elif degreeType == 'BS':
+        heading = 'Bachelor of Science'
+        return heading
+
+    #associate's ['AA', 'AAS','ABus', 'AGS','AS'],
+    elif degreeType == 'AA':
+        heading = 'Associate of Arts'
+        return heading
+    elif degreeType == 'AAS':
+        heading = 'Associate of Applied Science'
+        return heading
+    elif degreeType == 'ABus':
+        heading = 'Associate of Business'
+        return heading
+    elif degreeType == 'AGS':
+        heading = 'Associate of General Studies'
+        return heading
+    elif degreeType == 'AS':
+        heading = 'Associate of Science'
+        return heading
+
+    #cetificate
+    elif degreeType == 'Certificate':
+        heading = 'Certificates'
+        return heading
+
+    #unrecognized degree
+    else:
+        print('Degree Type Not Recognized')
+
+
+#fullName function - concatenate first, middle, and last name together
+def fullName(record):
+    
+    #concatenate first, middle, and last name into a full name
+    if record['middle'] == '':
+        fullName = record['first'] + '' + record['last']
+    else:
+        fullName = record['first'] + '' + record['middle'] + '' + record['last']
+    
+    # return fullName
+    pass
+
+
+#getHonorSymbol function - determine what honor symbol the recipient gets
+def getHonorSymbol(honorType):
+    #find what honor symbol matches the given honor type
+    #return appropriate honor symbol
+    pass
+    
+    
+#run the program / call main
+
+if __name__ == "__main__":
+    main()
