@@ -75,6 +75,21 @@ def displayMenu():
     return choice
 
 
+# give_program_instructions function - give instructions to the user on how to enter and format the input
+def displayInstructions():
+    print('')
+    print('Instructions')
+    print('1. Enter one recipient record per line.')
+    print('2. Enter the different fields in the following order:')
+    print('\tFirst Name\tMiddle Name\tLast Name\tDegree\tHonors Received')
+    print('3. Separate each field using a tab.')
+    print('4. Leave the middle name field blank if the recipient has none.')
+    print('5. Press enter when all recipient records have been put in to begin formatting.')
+    print('')
+    print("Paste Recipient Records Below. Type 'END' to Finish: ")
+    print('')
+    
+    
 #getRecipientRecords function - prompt user to enter recipient records 
 def getRecipientRecords():
     
@@ -121,21 +136,6 @@ def getRecipientRecords():
 
     #pass the final list back to main()
     return recordList
-
-
-# give_program_instructions function - give instructions to the user on how to enter and format the input
-def displayInstructions():
-    print('')
-    print('Instructions')
-    print('1. Enter one recipient record per line.')
-    print('2. Enter the different fields in the following order:')
-    print('\tFirst Name\tMiddle Name\tLast Name\tDegree\tHonors Received')
-    print('3. Separate each field using a tab.')
-    print('4. Leave the middle name field blank if the recipient has none.')
-    print('5. Press enter when all recipient records have been put in to begin formatting.')
-    print('')
-    print("Paste Recipient Records Below. Type 'END' to Finish: ")
-    print('')
 
 
 #validateRecordListLen - validate the length of each list
@@ -272,19 +272,16 @@ def checkNameCapitalization(recordDict):
     return recordDict
 
 
-#validateDegreeTypes() - checks for valid degree types
+#validateDegreeTypes() - get recordDict from validateRecordDict() and checks for valid degree types
 def validateDegreeTypes(recordDict):
+    #see if the recipeints degree type is in the recognized master list of degree types
+  while recordDict['degreeType'] not in DEGREE_TYPE['Bachelor']: 
+      print(f"{recordDict['degreeType']} is not currently offered at Eastern Arizona College.\n") 
+      print(f'Please choose one of the following:\n{DEGREE_TYPE}')
+      recordDict['degreeType'] = input('Update Degree Type: ')
+          
+  return recordDict
 
-    #need to look at how we cycled through degree types for getting headins and formatting lists since this is pretty similar
-    #see if given value exists in constant value list
-    if recordDict['degreeType'] not in DEGREE_TYPE.values():
-        #display error message
-        print(f'A(n) {recordDict['degreeType']} is not offered at Eastern Arizona College.')
-        print(f'\nThe available options are:\n{DEGREE_TYPE}\n')
-        while recordDict['degreeType'] not in DEGREE_TYPE.values():
-            recordDict['degreeType'] = input('Correct Degree Type: ')
-       
-    return recordDict
 
 
 #validateHonorTypes() - checks for valid honor types
