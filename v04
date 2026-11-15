@@ -1,0 +1,135 @@
+#Honor Type Constants
+
+NO_HONORS = ''
+HONORS = '*'
+HIGH_HONORS ='†'
+HIGHEST_HONORS = '‡'
+
+
+#displayTitle Function - introduces the program
+def displayTitle():
+    print('--- Commencement Program | Recipient Formatter --- ')
+    print('')
+    print('Run recipient records through the program and get a reformatted list.')
+    print('')
+
+
+#getRecipientRecords function - prompt user to enter recipient records 
+def getRecipientRecords():
+    
+    #display instructions to user    
+    #prompt user to enter recipient records        
+    #validate each record
+        #validate format
+        #validate honor type
+        #validate degrees
+    #call the formatList function to start formatting and sorting names
+    pass
+
+    
+# give_program_instructions function - give instructions to the user on how to enter and format the input
+def displayInstructions():
+    print('')
+    print('Instructions')
+    print('1. Enter one recipient record per line.')
+    print('2. Enter the different fields in the following order:')
+    print('\tFirst Name\tMiddle Name\tLast Name\tDegree\tHonors Received')
+    print('3. Separate each field using a tab.')
+    print('4. Leave the middle name field blank if the recipient has none.')
+    print('5. Press enter when all recipient records have been put in to begin formatting.')
+    print('')
+
+
+#formatList function - begins the formatting and sorting by utilizing nested loops
+def formatList(records):
+    #use nested loops to sort and display level by level
+    #outer loop = degree level
+        #inner loop 1 = degree type
+            #inner loop 2 = honor symbol + recipient name     
+    #print final formatted list
+    pass
+
+
+#sortDegreeHeadings function - receive multiple degree types and produce an ordered list.
+def sortDegreeHeadings(degreeType):
+    #identify the degree types
+    #eliminate duplicates
+    #sort each heading by rank and then alphabetically
+    #send each degree type to the getFullDegreeHeading function to convert it into
+    #the full heading name
+    #return full degree heading
+    pass
+
+
+#getFullDegreeHeading function - receive one degree type and convert it
+def getFullDegreeHeading(degreeType):
+    #identify the degree type
+    #return full degree heading
+    pass
+
+
+#organizeRecipients function - receive the recipient list and handle grouping and ordering 
+def organizeRecipients(first, middle, last, honorType):
+    #find recipients matching degree type
+    #sort recipients alphabetically by last name
+    #concatenate the first, middle, and last name into one full name
+    #pass honor type argument to getHonorSymbol function
+    #concatenate honor symbol + full name
+    #return recipient
+    pass
+
+
+#displayMenu Function - display the menu options
+def displayMenu():
+    
+    print('MENU SELECT')
+    print('1. Begin a New List')
+    print('2. End Program\n')
+    
+    choice = (input('Choose an Option (1 or 2): '))
+    
+    # validate input
+    
+    while choice != '1' and choice != '2':
+        print("\nThat isn't a menu option.")
+        choice = input('Choose either 1 or 2: ')
+            
+    return choice
+      
+
+#fullName function - concatenate first, middle, and last name together
+def fullName(first, middle, last):
+    
+    #concatenate first, middle, and last name into a full name
+    pass
+
+
+#getHonorSymbol function - determine what honor symbol the recipient gets
+def getHonorSymbol(honorType):
+    #find what honor symbol matches the given honor type
+    #return appropriate honor symbol
+    pass
+    
+
+#main function - run program
+def main():
+    displayTitle()
+    
+    #control the menu = 'direct traffic'
+    #set the initial start variable condition value
+    choice = '0'
+    
+    #determine if the user wants to quit the program
+    while choice != '2':
+        choice = displayMenu()
+        if choice == '1':
+            getRecipientRecords()
+            print('\nEntering a list is Coming Soon!\n') #placeholder
+            
+    print("\nThanks for using the Recipient Formatter. \nHave a good day!\n")
+    
+    
+#run the program / call main
+
+if __name__ == "__main__":
+    main()
