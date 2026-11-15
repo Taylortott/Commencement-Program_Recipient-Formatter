@@ -13,6 +13,10 @@ RECORD_FIELDS_COUNT = 5
 
 DEGREE_LEVEL = ['Bachelor', 'Associate', 'Certificate']
 
+DEGREE_TYPE = {'Bachelor': ['BA', 'BS'], 
+               'Associate': ['AA', 'AAS','ABus', 'AGS','AS'],
+               'Certificate': ['Certificate']}
+
 
 #main function - run program
 def main():
@@ -130,7 +134,7 @@ def displayInstructions():
     print('4. Leave the middle name field blank if the recipient has none.')
     print('5. Press enter when all recipient records have been put in to begin formatting.')
     print('')
-    print(f"Paste Recipient Records Below. Type 'END' to Finish: ")
+    print("Paste Recipient Records Below. Type 'END' to Finish: ")
     print('')
 
 
@@ -147,7 +151,7 @@ def validateListLen(list):
             print (f'{list} has more than {RECORD_FIELDS_COUNT} fields.\n Please reenter the record to have {RECORD_FIELDS_COUNT} fields, each seperated by a tab.\n')
            
             #prompt user for corrected record
-            list = input(f'Corrected Record: ')
+            list = input('Corrected Record: ')
 
             #resplit for the recount
             list = list.split('\t')
@@ -160,7 +164,7 @@ def validateListLen(list):
             print (f'{list} has less than {RECORD_FIELDS_COUNT} fields.\n Please reenter the record to have {RECORD_FIELDS_COUNT} fields, each separated by a tab:')
            
             #prompt user for corrected record
-            list = input(f'Corrected Record: ')
+            list = input('Corrected Record: ')
            
             #resplit for the recount
             list = list.split('\t')
@@ -172,16 +176,120 @@ def validateListLen(list):
 #validateRecordDict function - validate each element of the record dict key and allow for correction
 def validateRecordDict(recordDict):
      
-    #validate names
-    while recordDict['first'][0].isupper() == False:
-        #display error message
-        print(f'Error: The first name for {recordDict} is not capitalized. Please correct this: ')
-        #let the user correct the input
-        recordDict['first'] = input('')
-    return recordDict
-    #validate names
-    #validate degrees
+    #make a copy of the initial record 
+    originalRecord = recordDict.copy()
+    
+    #run the dict validation gauntlet
+    
+    #check for blank fields
+    checkBlankFields(recordDict)
+    
+    #check for name capitalization
+    checkNameCapitalization(recordDict)
+
+    #validate degree types
+    validateDegreeTypes(recordDict)
+    
     #validate honor type
+    validateHonorTypes(recordDict)
+    
+    #compare the initial version to the corrected version
+    if originalRecord != recordDict:
+        #display update message if changes were made
+        print(strike(originalRecord))
+        print(recordDict)
+        print(f'\nCorrections for {recordDict} have been accepted.\nContinue entering recipients or type END to begin reformatting:\n')
+    
+    return recordDict
+
+
+def strike(text):
+    result = ' '
+    for i in text:
+        for c in text[i]:
+            result = result + c + '\u0336'
+    return result
+
+
+#checkBlankFields() - checks for blank fields and prompts user to fill them
+def checkBlankFields(recordDict):
+    
+    #check each field (except for middle name)for blanks
+    if (recordDict['first'] == '' or recordDict['first'] == ' ') or (recordDict['last'] == '' or recordDict['last'] == ' ') or (recordDict['degreeType'] == '' or recordDict['degreeType'] == ' ') or (recordDict['honorType'] == '' or recordDict['honorType'] == ' '):
+        #print error message
+        print(f'One or more fields in {recordDict} are empty. Please enter the following:\n')
+        #enter loops
+        #first name field
+        while recordDict['first'] == '' or recordDict['first'] == ' ':
+            #let the user correct the input
+            recordDict['first'] = input(f'Enter the First Name for {recordDict}: ') 
+        #last name field
+        while recordDict['last'] == '' or recordDict['last'] == ' ':
+           #let the user correct the input
+           recordDict['last'] = input(f'Enter the Last Name for {recordDict}: ')
+       #degree type field
+        while recordDict['degreeType'] == '' or recordDict['degreeType'] == ' ':
+          #let the user correct the input
+          recordDict['degreeType'] = input(f'Enter the Degree Type for {recordDict}: ')
+      #honor type field
+        while recordDict['honorType'] == '' or recordDict['honorType'] == ' ':
+            #let the user correct the input
+            recordDict['honorType'] = input(f'Enter the Honors Earned for {recordDict}: ')
+ 
+    #exit input validation loops
+    
+    #return dict that has passed inspection / been updated
+    return recordDict
+
+
+#checkNameCapitalization() - checks the first, middle, and last recipient dict keys for capitalization
+def checkNameCapitalization(recordDict):
+    
+    #validate name capitalization for
+    # first, middle, and last
+
+    #check first, middle, and last dict keys
+    if recordDict['first'][0].isupper() == False or (recordDict['middle'] != '' and recordDict['middle'][0].isupper() == False) or recordDict['last'][0].isupper() == False:
+        #display error message
+        print(f'Error: {recordDict} has incorrect capitalization. Please correct the following:\n')
+        #enter loop
+        #correct first name
+        while recordDict['first'][0].isupper() == False:
+            #let the user correct the input
+            recordDict['first'] = input(f'First Name | Currently: {recordDict['first']}\tCorrected: ')
+            #correct middle name
+        while recordDict['middle'] != '' and recordDict['middle'][0].isupper() == False:
+            #let the user correct the input
+            recordDict['middle'] = input(f'Middle Name | Currently: {recordDict['middle']}\tCorrected: ')
+            #correct last name
+        while recordDict['last'][0].isupper() == False:
+            #let the user correct the input
+            recordDict['last'] = input(f'Last Name | Currently: {recordDict['last']}\tCorrected: ')
+        
+        #exit loops
+        
+    #return dict that has passed inspection / been updated
+    return recordDict
+
+
+#validateDegreeTypes() - checks for valid degree types
+def validateDegreeTypes(recordDict):
+
+    #need to look at how we cycled through degree types for getting headins and formatting lists since this is pretty similar
+    #see if given value exists in constant value list
+    if recordDict['degreeType'] not in DEGREE_TYPE.values():
+        #display error message
+        print(f'A(n) {recordDict['degreeType']} is not offered at Eastern Arizona College.')
+        print(f'\nThe available options are:\n{DEGREE_TYPE}\n')
+        while recordDict['degreeType'] not in DEGREE_TYPE.values():
+            recordDict['degreeType'] = input('Correct Degree Type: ')
+       
+    return recordDict
+
+
+#validateHonorTypes() - checks for valid honor types
+def validateHonorTypes(recordDict):
+    pass
 
 
 #formatList function - begins formatting and sorting by utilizing nested loops
@@ -271,6 +379,8 @@ def getUniqueDegreeTypes(recipientList):
     #sort each degree level lists alphabetically
     bachelorDegrees.sort()
     associateDegrees.sort()
+    
+    #certificates don't need to be sorted as there is only one type
     
     #add sorted lists to master dict list
     uniqueDegreeDict = dict(
