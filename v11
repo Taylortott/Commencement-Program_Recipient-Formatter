@@ -12,9 +12,6 @@ RECORD_FIELDS_COUNT = 5
 # we can do it in one place
 
 DEGREE_LEVEL = ['Bachelor', 'Associate', 'Certificate']
-DEGREE_TYPE = {'Bachelor': ['BA', 'BS'], 
-               'Associate': ['AA', 'AAS','ABus', 'AGS','AS'],
-               'Certificate': ['Certificate']}
 
 
 #main function - run program
@@ -32,7 +29,7 @@ def main():
         if choice == '1':
             #start collecting recipient records and return the list
             recipientList = getRecipientRecords()
-            #pass the list on to be processed and refformatted
+            #pass the list on to be processed and reformatted
             formattedRecipientList = formatList(recipientList)
             
             #print the reformatted list
@@ -192,6 +189,9 @@ def formatList(records):
     
     #create an empty list
     formattedList =[]
+    
+    #get a unique list of degrees to use in the formatting loops
+    uniqueDegreeList = getUniqueDegreeTypes(records)
    
     #use nested loops to sort by
         #degree level
@@ -208,7 +208,8 @@ def formatList(records):
         #inner loop 1 = degree type -- ex. BS
         #the value that the level variable gained in the outer loop is passed as a key to the degree type constant dictionary of lists in inner loop 1
         #the variable degreeType automatically has no value, it changes value by going through the degree types stored in the degree types constant dictionary lists accessed through the level variable key
-        for degreeType in DEGREE_TYPE[level]:
+        
+        for degreeType in uniqueDegreeList[level]:
             #pass degreeType to get the proper heading and store the returned value as heading
             heading = getFullDegreeHeading(degreeType)
             formattedList.append(heading)
@@ -232,44 +233,55 @@ def formatList(records):
                 recipient = (f'{getHonorSymbol(recipient)} {getFullName(recipient)}')
                 
                 #add that formatted name to the master formatted list
-                formattedList.append(f'\t{recipient}')
-    getUniqueDegreeTypes(records)              
+                formattedList.append(f'\t{recipient}')           
     #after ALL loops have concluded, return list to main()          
     return formattedList
 
 
-#sortDegreeHeadings function - receive multiple degree types and produce a sorted unique list with no duplicates
+#sortDegreeHeadings function - receive multiple degree types and produce a sorted list with no duplicates
 def getUniqueDegreeTypes(recipientList):
     
-    #make empty lists and dictionaries to fill
+    #empty degree lists to be filled in through iteration
+    certificates = []
+    associateDegrees = []
+    bachelorDegrees = []
     
-    #master dictionary list
-    uniqueDegreeList = {}
-    
-    #empty degree sub-dictionary lists
-    certificates = {'certificate':[]}
-    associateDegrees = {'associate':[]}
-    bachelorDegrees = {'bachelor': []}
-    masterDegrees = {'master': []}
-    
-
     #identify the degree types and add to list(s)
+    #iterate through each recipient in the list
     for recipient in recipientList:
-        if recipient['degreeType'][0] == 'a' or recipient['degreeType'][0] == 'A':
-            associateDegrees['associate'].update('degreeType')
-    #eliminate duplicates
-    uniqueAssociateDegrees = associateDegrees.set()     
-    #sort the lists
-    sortedUniqueAssociateDegrees = sorted(uniqueAssociateDegrees)
+        #check if the value currently exists in the list or not
+        #bachelor
+        if recipient['degreeType'][0] == 'b' or recipient['degreeType'][0] == 'B':
+            #detect and prevent adding of duplicates
+            if recipient['degreeType'] not in bachelorDegrees:
+                bachelorDegrees.append(recipient['degreeType'])
+        #associate
+        elif recipient['degreeType'][0] == 'a' or recipient['degreeType'][0] == 'A':
+            #detect and prevent adding of duplicates
+            if recipient['degreeType'] not in associateDegrees:
+                associateDegrees.append(recipient['degreeType'])
+        #certificate
+        elif recipient['degreeType'][0] == 'c' or recipient['degreeType'][0] == 'C':
+            #detect and prevent adding of duplicates
+            if recipient['degreeType'] not in certificates:
+                certificates.append(recipient['degreeType'])
     
-    #test print
-    print (sortedUniqueAssociateDegrees)
-        
-    #eliminate duplicates
-    #sort list(s) alphabetically
+    #exit the loop
+
+    #sort each degree level lists alphabetically
+    bachelorDegrees.sort()
+    associateDegrees.sort()
+    
+    #add sorted lists to master dict list
+    uniqueDegreeDict = dict(
+        #assign keys to list indexes
+        Bachelor = bachelorDegrees,
+        Associate = associateDegrees,
+        Certificate = certificates)
+
     #return sorted unique list to formatlist() to use in runs
     #so that only provided values are used instead of all possible values
-    pass
+    return uniqueDegreeDict
 
 
 #getFullDegreeHeading function - receive one degree type and convert it
@@ -300,7 +312,7 @@ def getFullDegreeHeading(degreeType):
         heading = 'Associate of Science'
         return heading
 
-    #cetificate
+    #certificate
     elif degreeType == 'Certificate':
         heading = 'Certificates'
         return heading
