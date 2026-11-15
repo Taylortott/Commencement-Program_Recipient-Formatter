@@ -16,17 +16,74 @@ def displayTitle():
 
 #getRecipientRecords function - prompt user to enter recipient records 
 def getRecipientRecords():
-    
-    #display instructions to user    
-    #prompt user to enter recipient records        
-    #validate each record
-        #validate format
-        #validate honor type
-        #validate degrees
-    #call the formatList function to start formatting and sorting names
-    pass
+  
+    #prompt user to set sentinel number
+    numStudents = int(input('How many graduates will be on the commencement program: '))
 
+    #display record input instructions to user   
+    displayInstructions()
+
+    #set up an empty list to fill with individual recipient dictionaries
+    recipientList = []
     
+    #set loop-control values
+    recipientLabel = 1
+    count = 0
+
+    #prompt user to enter recipient records as many times as there are graduates
+
+    for count in range (numStudents):
+
+        #prompt user
+        record = input(f'Recipient {recipientLabel}: ')
+
+        #split() auotomatically converts the input into a list
+        recordList = record.split('\t')
+
+        #convert list into dictionary
+        recipientDict = dict(first= recordList[0], middle= recordList[1], last= recordList[2], degreeType= recordList[3], honorType= recordList[4], )
+
+        #validate each record dictionary per recipient by passing it to validateRecord (recipientDict)
+
+        #test print
+        print(recipientDict.get("first"))
+
+        #add that dictionary to the master list
+        recipientList.append(recipientDict)
+
+        #update label
+        recipientLabel += 1
+
+    return recipientList
+
+    #call the formatList function to start formatting and sorting names
+ 
+#validateRecords function - validate each element of the record and allow for correction
+def validateRecord(record):
+        
+        #validate names
+
+        #use record[#][#] != record[#][#].upper() to check if the first character does not match an uppercase letter
+        #because we are comparing the current version to a capitalized version
+        #index twice
+            #first index: record[0] goes into the list and picks out the str
+            #second index: record[0][0] goes into the str and picks out the character
+
+        #check first name for correct capitalization
+        if record['first'] != record['first'].upper():
+            #let the user correct the input
+            while record['first'] != record['first'].upper():
+                print(f'Error: The first name for {record} is not capitalized. Please correct this: ')
+                record['first'] = input('')
+        else:
+            return record
+
+        return record
+    #validate names
+    #validate degrees
+    #validate honor type
+
+
 # give_program_instructions function - give instructions to the user on how to enter and format the input
 def displayInstructions():
     print('')
@@ -123,8 +180,8 @@ def main():
     while choice != '2':
         choice = displayMenu()
         if choice == '1':
-            getRecipientRecords()
-            print('\nEntering a list is Coming Soon!\n') #placeholder
+            recipientList = getRecipientRecords()
+            print (recipientList)
             
     print("\nThanks for using the Recipient Formatter. \nHave a good day!\n")
     
