@@ -1,25 +1,25 @@
-#program to recieve, sort, and format graduate recipients for a commencement program based on
-#1. Degreee Level - Bachelor > Associate > Certificate
-#2. Degree Type - Alphabetized
-#3. Denote Honors recieved per recipient
-        #no honors
-        #honors
-        #high honors
-        #highest honors
-#4. Format first, middle, last into full name
-#5. Alphabetize reipient list by last name
+Program to sort and format graduate recipients for a commencement program. 
 
-#main function - introduce program
+"""
+
+#Honor Type Constants
+
+NO_HONOR = ''
+HONORS = '•'
+HIGH_HONORES ='†'
+HIGHEST_HONORS = '‡'
+
+#main function - run program
 def main():
-    print('--- Commencement Program | Recipient Formatter --- ')
-    
-    #get list of recipients
-    get_recipient_records()
-    
-    #start sorting and formatiing the list
-    format_list()
+    displayTitle()
+    displayMenu()
 
-#get_recipients function - prompt the user to enter list of recipients
+#displayTitle Function - introduces the program
+def displayTitle():
+    print('--- Commencement Program | Recipient Formatter --- ')
+    print('')
+    print('Run recipient records through the program and get a reformatted list.')
+    print('')
 
 def get_recipient_records():
     
@@ -32,9 +32,6 @@ def get_recipient_records():
     
 # give_program_instructions function - give intructions to the user on how to enter and format the input
 def dispaly_input_instructions():
-    
-    #If the instructions have to be changed for clarity and usability, I'd rather edit it in it's only function block 
-    #than track it down in another function that has other code for a different task
     
     print('')
     print('Instructions')
@@ -71,6 +68,30 @@ def get_degree_headings():
 #organize_recipients function - recieve the recipient list and handle grouping and ordering 
 def organize_recipients():
     pass
+
+#displaynMenu Function - display the menu options
+def displayMenu():
+    
+    print('MENU SELECT')
+    print('1. Run a New List')
+    print('2. End Program')
+    #must convert str into int for input validation
+    choice = int(input('Choose an Option (1 or 2): '))
+    
+    while choice < 1 or choice > 2:
+        print("That isn't a menu option.")
+        #must convert str into int for input validation
+        choice = int(input('Choose either 1 or 2: '))
+
+    if choice == 1:
+        #get list of recipients
+        get_recipient_records()
+        print('Getting list of recipients.')
+    else:
+        print('Thanks for using the Recipient Formatter. Have a good day!')
+        
+
 #run the program / call main
 
-main()
+if __name__ == "__main__":
+    main()
