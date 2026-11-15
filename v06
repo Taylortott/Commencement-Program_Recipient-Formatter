@@ -17,46 +17,40 @@ def displayTitle():
 #getRecipientRecords function - prompt user to enter recipient records 
 def getRecipientRecords():
   
-    #prompt user to set sentinel number
-    numStudents = int(input('How many graduates will be on the commencement program: '))
-
+    #set up an empty list to fill with individual recipient dictionaries
+    recordList = []
+    
     #display record input instructions to user   
     displayInstructions()
-
-    #set up an empty list to fill with individual recipient dictionaries
-    recipientList = []
     
-    #set loop-control values
-    recipientLabel = 1
-    count = 0
+    print(f"Paste Recipient Records Below. Type 'END' to Finish: \n\n")
+    
+    #prompt user to enter recipient records
 
-    #prompt user to enter recipient records as many times as there are graduates
-
-    for count in range (numStudents):
+    while True:
 
         #prompt user
-        record = input(f'Recipient {recipientLabel}: ')
-
-        #split() auotomatically converts the input into a list
-        recordList = record.split('\t')
+        record = input('')
+        if record == 'END':
+            break
+        #split the record into 5 list elements
+        record = record.split('\t')
+        
+        #validate the records
 
         #convert list into dictionary
-        recipientDict = dict(first= recordList[0], middle= recordList[1], last= recordList[2], degreeType= recordList[3], honorType= recordList[4], )
-
-        #validate each record dictionary per recipient by passing it to validateRecord (recipientDict)
-
-        #test print
-        print(recipientDict.get("first"))
+        recipientDict = dict(
+            #assign out keys
+            first= record[0], 
+            middle= record[1], 
+            last= record[2], 
+            degreeType= record[3], 
+            honorType= record[4] )
 
         #add that dictionary to the master list
-        recipientList.append(recipientDict)
+        recordList.append(recipientDict)
 
-        #update label
-        recipientLabel += 1
-
-    return recipientList
-
-    #call the formatList function to start formatting and sorting names
+    return recordList
  
 #validateRecords function - validate each element of the record and allow for correction
 def validateRecord(record):
@@ -99,31 +93,48 @@ def displayInstructions():
 
 #formatList function - begins the formatting and sorting by utilizing nested loops
 def formatList(records):
+    
+    #set loop-control variable
+    c = 0
+    
     #use nested loops to sort and display level by level
-    #outer loop = degree level
+    #we len the records so we don't get an indexing error
+    for item in range(len(records)):
+        #outer loop - degree headings
+        degreelevel = sortDegreeHeadings(records)
+                
         #inner loop 1 = degree type
             #inner loop 2 = honor symbol + recipient name     
     #print final formatted list
-    pass
 
 
 #sortDegreeHeadings function - receive multiple degree types and produce an ordered list.
-def sortDegreeHeadings(degreeType):
+reheniondef sortDegreeHeadings(degreeType):
     #identify the degree types
     #eliminate duplicates
     #sort each heading by rank and then alphabetically
     #send each degree type to the getFullDegreeHeading function to convert it into
     #the full heading name
     #return full degree heading
-    pass
+    heading = getFullDegreeHeading(degreeType)
+    
+    return heading
+    
 
 
 #getFullDegreeHeading function - receive one degree type and convert it
-def getFullDegreeHeading(degreeType):
-    #identify the degree type
-    #return full degree heading
-    pass
-
+def getFullDegreeHeading(list):
+    
+    #set loop-control variable
+    c = 0
+    
+    #we len the records so we don't get an indexing error
+    for item in range(len(list)):
+    #outer loop = degree level
+        #identify the degree type by going into the list
+        if list[c].get("degreeType") == 'BA':
+            #return full degree heading
+            return print('Bachelor of Arts')
 
 #organizeRecipients function - receive the recipient list and handle grouping and ordering 
 def organizeRecipients(first, middle, last, honorType):
@@ -181,6 +192,7 @@ def main():
         choice = displayMenu()
         if choice == '1':
             recipientList = getRecipientRecords()
+            formatList(recipientList)
             print (recipientList)
             
     print("\nThanks for using the Recipient Formatter. \nHave a good day!\n")
