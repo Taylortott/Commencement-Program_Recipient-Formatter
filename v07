@@ -5,6 +5,16 @@ HONORS = '*'
 HIGH_HONORS ='†'
 HIGHEST_HONORS = '‡'
 
+#how many fields each record must have
+COL = 5
+
+#degree level constants so if we ever need to add a new degree level 
+# we can do it in one place
+
+DEGREE_LEVEL = ['Bachelor', 'Associate', 'Certificate']
+DEGREE_TYPE = {'Bachelor': ['BA', 'BS'], 
+               'Associate': ['AA', 'AAS','ABus', 'AGS','AS'],
+               'Certificate': ['Certificate']}
 
 #displayTitle Function - introduces the program
 def displayTitle():
@@ -37,42 +47,71 @@ def getRecipientRecords():
         record = record.split('\t')
         
         #validate the records
+        #and store the result
+        record = validateListLen(record)
 
         #convert list into dictionary
         recipientDict = dict(
-            #assign out keys
+            #assign keys to list indexes
             first= record[0], 
             middle= record[1], 
             last= record[2], 
             degreeType= record[3], 
             honorType= record[4] )
-
+        
+        #validate the format for each dict key
+        validateRecord(recipientDict)
+        
+        #Did the dict pass the validation gauntlet?
         #add that dictionary to the master list
         recordList.append(recipientDict)
 
     return recordList
  
-#validateRecords function - validate each element of the record and allow for correction
-def validateRecord(record):
+    
+#validateRecordListLen - validate the length of each list
+def validateListLen(list):
+    while len(list) != COL:
         
-        #validate names
+        #test for excess fields
+        
+        if len(list) > COL:
+            #display error message
+            print (f'{list} has more than {COL} fields.\n Please reenter the record to have {COL} fields, each seperated by a tab.\n')
+           
+            #prompt user for corrected record
+            list = input(f'Corrected Record: ')
 
-        #use record[#][#] != record[#][#].upper() to check if the first character does not match an uppercase letter
-        #because we are comparing the current version to a capitalized version
-        #index twice
-            #first index: record[0] goes into the list and picks out the str
-            #second index: record[0][0] goes into the str and picks out the character
+            #resplit for the recount
+            list = list.split('\t')
+            
+        #test for not enough fields
+    
+        elif len(list) < COL:
+            
+            #display error message
+            print (f'{list} has less than {COL} fields.\n Please reenter the record to have {COL} fields, each separated by a tab:')
+           
+            #prompt user for corrected record
+            list = input(f'Corrected Record: ')
+           
+            #resplit for the recount
+            list = list.split('\t')
+            
+        
+    return list
+    
 
-        #check first name for correct capitalization
-        if record['first'] != record['first'].upper():
-            #let the user correct the input
-            while record['first'] != record['first'].upper():
-                print(f'Error: The first name for {record} is not capitalized. Please correct this: ')
-                record['first'] = input('')
-        else:
-            return record
-
-        return record
+#validateRecords function - validate each element of the record dict key and allow for correction
+def validateRecord(record):
+     
+    #validate names
+    while record['first'][0].isupper() == False:
+        #display error message
+        print(f'Error: The first name for {record} is not capitalized. Please correct this: ')
+        #let the user correct the input
+        record['first'] = input('')
+    return record
     #validate names
     #validate degrees
     #validate honor type
@@ -94,45 +133,75 @@ def displayInstructions():
 #formatList function - begins the formatting and sorting by utilizing nested loops
 def formatList(records):
     
-    #set loop-control variable
-    c = 0
-    
     #use nested loops to sort and display level by level
-    #we len the records so we don't get an indexing error
-    for item in range(len(records)):
-        #outer loop - degree headings
-        degreelevel = sortDegreeHeadings(records)
-                
+    
+    #outer loop - degree level
+    #we len the list so we don't get an indexing error
+    for item in range(len(DEGREE_LEVEL)):
+
         #inner loop 1 = degree type
-            #inner loop 2 = honor symbol + recipient name     
+        for item in range(len(DEGREE_TYPE.values())):
+            degreeType = getFullDegreeHeading(records)
+            print(degreeType)
+            
+            #inner loop 2 = honor symbol + full name 
+            for item in range(len(degreeType)):
+                recipient = getHonorSymbol(records) + '' + fullName(records)
+                
     #print final formatted list
 
 
-#sortDegreeHeadings function - receive multiple degree types and produce an ordered list.
-reheniondef sortDegreeHeadings(degreeType):
+#sortDegreeHeadings function - receive multiple degree types and produce a sorted list.
+def sortDegreeHeadings(list):
+    
+    #make an empty list
+    bachelorRecipients= []
+
+    #we len the records so we don't get an indexing error
+    for item in range(len(list)):
+        #identify the degree type by going into the list
+        if list[item].get("degreeType") == 'BA' or list[item].get("degreeType") == 'BS':
+            #add just the element that matches
+            bachelorRecipients.append(list[item])
+            
+    #sort the entire dict list
+    #sort the list          #look at each dict             #sort by this key
+    bachelorRecipients.sort(key=lambda recipient: recipient["degreeType"])
+    
+    return bachelorRecipients
+
     #identify the degree types
     #eliminate duplicates
     #sort each heading by rank and then alphabetically
     #send each degree type to the getFullDegreeHeading function to convert it into
     #the full heading name
-    #return full degree heading
-    heading = getFullDegreeHeading(degreeType)
+    heading = getFullDegreeHeading(list)
     
+    #return full degree heading
     return heading
     
-
+#determineDegreeLevel function - determine the degree level for a record
+def determineDegreeLevel(degreeType):
+    if degreeType == 'BA' or degreeType == 'BS':
+        degreeLevel = 'Bachelor'
+        return degreeLevel
+    elif degreeType == 'AA' or degreeType == 'ABus' or degreeType == 'AS' or degreeType == 'AGS' or degreeType == 'AAS':
+        degreeLevel = 'Associate'
+        return degreeLevel
+    elif degreeType == 'Certificate' or degreeType == 'certificate':
+        degreelevel = 'Certificate'
+        return degreeLevel
+    else:
+        print('That is not a recognized degree level.')
 
 #getFullDegreeHeading function - receive one degree type and convert it
 def getFullDegreeHeading(list):
-    
-    #set loop-control variable
-    c = 0
     
     #we len the records so we don't get an indexing error
     for item in range(len(list)):
     #outer loop = degree level
         #identify the degree type by going into the list
-        if list[c].get("degreeType") == 'BA':
+        if list[item].get("degreeType") == 'BA':
             #return full degree heading
             return print('Bachelor of Arts')
 
@@ -166,10 +235,15 @@ def displayMenu():
       
 
 #fullName function - concatenate first, middle, and last name together
-def fullName(first, middle, last):
+def fullName(record):
     
     #concatenate first, middle, and last name into a full name
-    pass
+    if record['middle'] == '':
+        fullName = record['first'] + '' + record['last']
+    else:
+        fullName = record['first'] + '' + record['middle'] + '' + record['last']
+    
+    return fullName
 
 
 #getHonorSymbol function - determine what honor symbol the recipient gets
