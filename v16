@@ -5,6 +5,9 @@ HONORS = '*'
 HIGH_HONORS ='†'
 HIGHEST_HONORS = '‡'
 
+#constant list used as an input validation standard
+HONOR_TYPE = ['No Honors', 'Honors', 'High Honors', 'Highest Honors']
+
 #how many fields each record must have
 RECORD_FIELDS_COUNT = 5
 
@@ -13,6 +16,7 @@ RECORD_FIELDS_COUNT = 5
 
 DEGREE_LEVEL = ['Bachelor', 'Associate', 'Certificate']
 
+#constant list used as an input validation standard
 DEGREE_TYPE = {'Bachelor': ['BA', 'BS'], 
                'Associate': ['AA', 'AAS','ABus', 'AGS','AS'],
                'Certificate': ['Certificate']}
@@ -58,7 +62,7 @@ def displayTitle():
 #displayMenu Function - display the menu options and return the user's choice
 def displayMenu():
     
-    print('MENU SELECT')
+    print('\nMENU SELECT')
     print('1. Begin a New List')
     print('2. End Program\n')
     
@@ -196,18 +200,31 @@ def validateRecordDict(recordDict):
     #compare the initial version to the corrected version
     if originalRecord != recordDict:
         #display update message if changes were made
+        #convert dict to str
+        originalRecord  = convertRecordDictToStr(originalRecord)
+        #strike through the old record
         print(strike(originalRecord))
-        print(recordDict)
-        print(f'\nCorrections for {recordDict} have been accepted.\nContinue entering recipients or type END to begin reformatting:\n')
+        print(convertRecordDictToStr(recordDict))
+        print('\nContinue entering recipients or enter END to begin reformatting:\n')
     
     return recordDict
 
 
+#printRecordDict ( ) - convert dict to a str
+def convertRecordDictToStr(record):
+    #format the record by converting the dict into a str
+    record  = record['first'] + ' '+ record['middle'] + ' '+ record['last'] + ' '+ record['degreeType'] + ' '+ record['honorType']
+
+    return record
+
+
+#strike( ) - adds a strike through to each word in a str
 def strike(text):
+    #set up result varibale
     result = ' '
+    #fill result variable with each str elements being stricken through
     for i in text:
-        for c in text[i]:
-            result = result + c + '\u0336'
+        result = result + i + '\u0336'
     return result
 
 
@@ -217,27 +234,43 @@ def checkBlankFields(recordDict):
     #check each field (except for middle name)for blanks
     if (recordDict['first'] == '' or recordDict['first'] == ' ') or (recordDict['last'] == '' or recordDict['last'] == ' ') or (recordDict['degreeType'] == '' or recordDict['degreeType'] == ' ') or (recordDict['honorType'] == '' or recordDict['honorType'] == ' '):
         #print error message
-        print(f'One or more fields in {recordDict} are empty. Please enter the following:\n')
+        #convert dict to str for print
+        strRecord = convertRecordDictToStr(recordDict)
+        print(f"\nThe record for '{strRecord}' is incomplete as one or more fields are empty.")
         #enter loops
         #first name field
         while recordDict['first'] == '' or recordDict['first'] == ' ':
+            print("\nPlease enter the following to complete this record:\n")
             #let the user correct the input
-            recordDict['first'] = input(f'Enter the First Name for {recordDict}: ') 
+            recordDict['first'] = input("First Name: ") 
         #last name field
         while recordDict['last'] == '' or recordDict['last'] == ' ':
-           #let the user correct the input
-           recordDict['last'] = input(f'Enter the Last Name for {recordDict}: ')
+            print("\nPlease enter the following to complete this record:\n")
+            #let the user correct the input
+            recordDict['last'] = input("Last Name: ")
        #degree type field
         while recordDict['degreeType'] == '' or recordDict['degreeType'] == ' ':
+          #display options
+          print("\nPlease enter one of the following degree types to complete this record:\n")
+          #display a table
+          print('Degree Level\t|\tDegree Type')
+          print('---------------------------------')
+          print('Bachelor\t|\t' + ', '.join(DEGREE_TYPE['Bachelor']))
+          print('Associate\t|\t' + ', '.join(DEGREE_TYPE['Associate']))
+          print('Certificate\t|\t' + ', '.join(DEGREE_TYPE['Certificate']))
+          print('')
           #let the user correct the input
-          recordDict['degreeType'] = input(f'Enter the Degree Type for {recordDict}: ')
+          recordDict['degreeType'] = input("Degree Type: ")
       #honor type field
         while recordDict['honorType'] == '' or recordDict['honorType'] == ' ':
             #let the user correct the input
-            recordDict['honorType'] = input(f'Enter the Honors Earned for {recordDict}: ')
+            recordDict['honorType'] = input("Honors Earned: ")
  
     #exit input validation loops
     
+    #display a victory message and let the user know the next step
+    print(f"\nThe record for {recordDict['first']} is now complete.\n")
+
     #return dict that has passed inspection / been updated
     return recordDict
 
@@ -278,15 +311,25 @@ def validateDegreeTypes(recordDict):
     #if the degree type input is not in any of dict lists (which is why we use AND here), then we enter the loop
   while recordDict['degreeType'] not in DEGREE_TYPE['Bachelor'] and recordDict['degreeType'] not in DEGREE_TYPE['Associate'] and recordDict['degreeType'] not in DEGREE_TYPE['Certificate']: 
       print(f"{recordDict['degreeType']} is not currently offered at Eastern Arizona College.\n") 
-      print(f'Please choose one of the following:\n{DEGREE_TYPE}')
-      recordDict['degreeType'] = input('Update Degree Type: ')
+      print('Please choose one of the following:')
+      print('Bachelor:\t' + ', '.join(DEGREE_TYPE['Bachelor']))
+      print('Associate:\t' + ', '.join(DEGREE_TYPE['Associate']))
+      print('Certificate:\t' + ', '.join(DEGREE_TYPE['Certificate']))
+      print('')
+      recordDict['degreeType'] = input('Enter Degree Type: ')
           
   return recordDict
 
-
 #validateHonorTypes() - checks for valid honor types
 def validateHonorTypes(recordDict):
-    pass
+    #see if the recipeints honor type is in the recognized master list of degree types
+    #if the degree type input is not in any of dict lists (which is why we use AND here), then we enter the loop
+  while recordDict['honorType'] not in HONOR_TYPE: 
+      print(f"{recordDict['honorType']} is not a valid honor type.") 
+      print(f'Please choose one of the following:\n{HONOR_TYPE}')
+      recordDict['honorType'] = input('Update Honor Type: ')
+          
+  return recordDict
 
 
 #formatList function - begins formatting and sorting by utilizing nested loops
