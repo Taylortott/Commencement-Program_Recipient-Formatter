@@ -1,3 +1,9 @@
+"""
+
+Program to sort and format graduate recipients for a commencement program. 
+
+"""
+
 #Honor Type Symbol Constants
 
 NO_HONORS = ' '
@@ -63,6 +69,7 @@ def displayTitle():
 def displayMenu():
     
     print('\nMENU SELECT')
+    print('-' * 25)
     print('1. Begin a New List')
     print('2. End Program\n')
     
@@ -82,15 +89,19 @@ def displayMenu():
 # give_program_instructions function - give instructions to the user on how to enter and format the input
 def displayInstructions():
     print('')
-    print('Instructions')
-    print('1. Enter one recipient record per line.')
-    print('2. Enter the different fields in the following order:')
-    print('\tFirst Name\tMiddle Name\tLast Name\tDegree\tHonors Received')
+    print('HOW TO ADD TO THE LIST')
+    print('-' * 25)
+    print("1. Enter one recipient's information per line.")
+    print('2. Enter the information in the following order:')
+    print('\t(1) First Name\t(2) Middle Name\t(3) Last Name\t(4) Degree\t(5) Honors Received')
     print('3. Separate each field using a tab.')
-    print('4. Leave the middle name field blank if the recipient has none.')
-    print('5. Press enter when all recipient records have been put in to begin formatting.')
+    print("4. Leave the middle name field blank if one isn't given.")
+    print('5. Press enter to commit a record to the list.')
+    print("6. When all recipients have been recorded, enter 'END' to begin reformatting.")
     print('')
-    print("Paste Recipient Records Below. Type 'END' to Finish: ")
+    print('Example: John\tJ.\tDoe\tAAS\tHigh Honors')
+    print('')
+    print("Enter Recipient Records Below: ")
     print('')
     
     
@@ -143,38 +154,56 @@ def getRecipientRecords():
 
 
 #validateRecordListLen - validate the length of each list
-def validateListLen(list):
+def validateListLen(recipient):
 
     #validate list length
-    while len(list) != RECORD_FIELDS_COUNT:
+    while len(recipient) != RECORD_FIELDS_COUNT:
         
         #test for excess fields
         
-        if len(list) > RECORD_FIELDS_COUNT:
+        if len(recipient) > RECORD_FIELDS_COUNT:
             #display error message
-            print (f'{list} has more than {RECORD_FIELDS_COUNT} fields.\n Please reenter the record to have {RECORD_FIELDS_COUNT} fields, each seperated by a tab.\n')
+            print('')
+            print (f'{recipient} has too much information.')
+            print('')
+            print ('Please reenter the record to have only one of each:')
+            print('- first name')
+            print('- middle name')
+            print('- last name')
+            print('- degree')
+            print('- honors recieved')
+            print('Make sure each piece is separated by a tab:.')
+            print('')
            
             #prompt user for corrected record
-            list = input('Corrected Record: ')
+            recipient = input('Enter the corrected record below:\n ')
 
             #resplit for the recount
-            list = list.split('\t')
+            recipient = recipient.split('\t')
             
         #test for not enough fields
     
-        elif len(list) < RECORD_FIELDS_COUNT:
+        elif len(recipient) < RECORD_FIELDS_COUNT:
             
             #display error message
-            print (f'{list} has less than {RECORD_FIELDS_COUNT} fields.\n Please reenter the record to have {RECORD_FIELDS_COUNT} fields, each separated by a tab:')
+            print (f'{recipient} is incomplete.')
+            print('')
+            print ('Please reenter the record to have each of the following:')
+            print('- first name')
+            print('- middle name')
+            print('- last name')
+            print('- degree')
+            print('- honors recieved')
+            print('Make sure each piece is separated by a tab:')
            
             #prompt user for corrected record
-            list = input('Corrected Record: ')
+            recipient = input('Enter the corrected record below:\n ')
            
             #resplit for the recount
-            list = list.split('\t')
+            recipient = recipient.split('\t')
 
     #once the list has the correct amount of fields, return the list
-    return list
+    return recipient
     
 
 #validateRecordDict function - validate each element of the record dict key and allow for correction
@@ -220,9 +249,7 @@ def convertRecordDictToStr(record):
 
 #strike( ) - adds a strike through to each word in a str
 def strike(text):
-    #set up result varibale
     result = ' '
-    #fill result variable with each str elements being stricken through
     for i in text:
         result = result + i + '\u0336'
     return result
@@ -264,12 +291,10 @@ def checkBlankFields(recordDict):
       #honor type field
         while recordDict['honorType'] == '' or recordDict['honorType'] == ' ':
             #let the user correct the input
-            recordDict['honorType'] = input("Honors Earned: ")
+            recordDict['honorType'] = input("Honors Earned: ")      
  
     #exit input validation loops
-    
-    #display a victory message and let the user know the next step
-    print(f"\nThe record for {recordDict['first']} is now complete.\n")
+
 
     #return dict that has passed inspection / been updated
     return recordDict
