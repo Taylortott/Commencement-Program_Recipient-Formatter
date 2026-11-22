@@ -1,5 +1,9 @@
 """
 
+Taylor Ellett
+
+11.21.2026
+
 Program to sort and format graduate recipients for a commencement program. 
 
 """
@@ -28,8 +32,18 @@ DEGREE_TYPE = {'Bachelor': ['BA', 'BS'],
                'Certificate': ['Certificate']}
 
 
-#main function - run program
 def main():
+    
+    """
+   Run the program and direct main functions
+
+   Parameters:
+       none
+
+   Returns:
+       none
+   """
+   
     displayTitle()
     
     #control the menu = 'direct traffic'
@@ -44,6 +58,8 @@ def main():
             #start collecting recipient records and return the list
             recipientList = getRecipientRecords()
             #pass the list on to be processed and reformatted
+            print('')
+            print('----- Reformatted Recipients List -----')
             formattedRecipientList = formatList(recipientList)
             
             #print the reformatted list
@@ -53,8 +69,17 @@ def main():
     print("\nThanks for using the Recipient Formatter. \nHave a good day!\n")
 
 
-#displayTitle Function - introduces the program
 def displayTitle():
+    
+    """
+   Introduce the program.
+
+   Parameters:
+       none
+
+   Returns:
+       none
+   """
     
     #display title
     print('--- Commencement Program | Recipient Formatter --- ')
@@ -65,12 +90,21 @@ def displayTitle():
     print('')
 
 
-#displayMenu Function - display the menu options and return the user's choice
 def displayMenu():
+    
+    """
+   Display the menu options and get the user's choice
+
+   Parameters:
+       none
+
+   Returns:
+       choice (int): the option the user chose
+   """
     
     print('\nMENU SELECT')
     print('-' * 25)
-    print('1. Begin a New List')
+    print('1. Make a New Recipient List')
     print('2. End Program\n')
     
     #prompt user
@@ -86,10 +120,20 @@ def displayMenu():
     return choice
 
 
-# give_program_instructions function - give instructions to the user on how to enter and format the input
 def displayInstructions():
+    
+    """
+   Give instructions to the user on how to enter and format the input.
+
+   Parameters:
+       none
+
+   Returns:
+       none
+   """
+   
     print('')
-    print('HOW TO ADD TO THE LIST')
+    print('HOW TO MAKE A LIST')
     print('-' * 25)
     print("1. Enter one recipient's information per line.")
     print('2. Enter the information in the following order:')
@@ -105,8 +149,17 @@ def displayInstructions():
     print('')
     
     
-#getRecipientRecords function - prompt user to enter recipient records 
 def getRecipientRecords():
+    
+    """
+   Prompt user to enter recipient records
+
+   Parameters:
+       none
+
+   Returns:
+       recordList(list): a list containing all recipient dicts
+   """
     
     #display input instructions to user   
     displayInstructions()
@@ -122,6 +175,7 @@ def getRecipientRecords():
 
         #prompt user
         record = input('')
+        print('')
 
         #terminate condition
         if record == 'END':
@@ -153,61 +207,83 @@ def getRecipientRecords():
     return recordList
 
 
-#validateRecordListLen - validate the length of each list
 def validateListLen(recipient):
-
-    #validate list length
-    while len(recipient) != RECORD_FIELDS_COUNT:
-        
-        #test for excess fields
-        
-        if len(recipient) > RECORD_FIELDS_COUNT:
-            #display error message
-            print('')
-            print (f'{recipient} has too much information.')
-            print('')
-            print ('Please reenter the record to have only one of each:')
-            print('- first name')
-            print('- middle name')
-            print('- last name')
-            print('- degree')
-            print('- honors recieved')
-            print('Make sure each piece is separated by a tab:.')
-            print('')
-           
-            #prompt user for corrected record
-            recipient = input('Enter the corrected record below:\n ')
-
-            #resplit for the recount
-            recipient = recipient.split('\t')
-            
-        #test for not enough fields
     
-        elif len(recipient) < RECORD_FIELDS_COUNT:
-            
-            #display error message
-            print (f'{recipient} is incomplete.')
-            print('')
-            print ('Please reenter the record to have each of the following:')
-            print('- first name')
-            print('- middle name')
-            print('- last name')
-            print('- degree')
-            print('- honors recieved')
-            print('Make sure each piece is separated by a tab:')
-           
-            #prompt user for corrected record
-            recipient = input('Enter the corrected record below:\n ')
-           
-            #resplit for the recount
-            recipient = recipient.split('\t')
+    """
+   Validate the length of each list
 
+   Parameters:
+       recipient(list) - the initial recipient record input
+
+   Returns:
+       recipirnt(list): a list that contains the informatioon for an indivisual recipient
+   """
+
+    if len(recipient) != RECORD_FIELDS_COUNT:
+        print('\n---------- X Correction Needed ----------')
+        #validate list length
+        while len(recipient) != RECORD_FIELDS_COUNT:
+            
+            #test for excess fields
+            
+            invalidEntry = (" ".join([str(item) for item in recipient]))
+        
+            if len(recipient) > RECORD_FIELDS_COUNT:
+                #display error message
+                print('')
+                print (f"'{invalidEntry}' has too much information.")
+                print('')
+                print ('Please reenter the record to have only one of each:')
+                print('- first name')
+                print('- middle name')
+                print('- last name')
+                print('- degree')
+                print('- honors recieved')
+                print('Make sure each piece is separated by a tab.')
+                print('')
+           
+                #prompt user for corrected record
+                recipient = input('Enter the corrected record below:\n ')
+
+                #resplit for the recount
+                recipient = recipient.split('\t')
+            
+            #test for not enough fields
+    
+            elif len(recipient) < RECORD_FIELDS_COUNT:
+            
+                #display error message
+                print (f"'{invalidEntry}' is incomplete.")
+                print('')
+                print ('Please reenter the record to have each of the following:')
+                print('- first name')
+                print('- middle name')
+                print('- last name')
+                print('- degree')
+                print('- honors recieved')
+                print('Make sure each piece is separated by a tab.')
+                print('')
+                #prompt user for corrected record
+                recipient = input('Enter the corrected record below:\n')
+           
+                #resplit for the recount
+                recipient = recipient.split('\t')
+        print('\n---------- ✓ Correction Accepted ----------\n')
     #once the list has the correct amount of fields, return the list
     return recipient
     
 
-#validateRecordDict function - validate each element of the record dict key and allow for correction
 def validateRecordDict(recordDict):
+    
+    """
+    Validate each element of the record dict key and allow for correction
+
+    Parameters:
+        recordDict (dict):  the dict of an individual recipient's info
+
+    Returns:
+        recordDict (dict): a corrected or original dict of an individual recipient info
+    """
      
     #make a copy of the initial record 
     originalRecord = recordDict.copy()
@@ -228,7 +304,6 @@ def validateRecordDict(recordDict):
     
     #compare the initial version to the corrected version
     if originalRecord != recordDict:
-        #display update message if changes were made
         #convert dict to str
         originalRecord  = convertRecordDictToStr(originalRecord)
         #strike through the old record
@@ -239,28 +314,59 @@ def validateRecordDict(recordDict):
     return recordDict
 
 
-#printRecordDict ( ) - convert dict to a str
 def convertRecordDictToStr(record):
+    
+    """
+    Convert dict to a str
+
+    Parameters:
+        record (dict): the dict of an individual recipient's info'
+
+    Returns:
+        record (str): a recipient's info, ready for print
+    """
+    
     #format the record by converting the dict into a str
     record  = record['first'] + ' '+ record['middle'] + ' '+ record['last'] + ' '+ record['degreeType'] + ' '+ record['honorType']
 
     return record
 
 
-#strike( ) - adds a strike through to each word in a str
 def strike(text):
-    result = ' '
+    
+    """
+    Adds a strike through to each word in a str
+
+    Parameters:
+        text (str) : the dict of an individual recipient's info converted to a str
+
+    Returns:
+        result (str): a recipient's info struck through
+    """
+    
+    result = ''
     for i in text:
         result = result + i + '\u0336'
     return result
 
 
-#checkBlankFields() - checks for blank fields and prompts user to fill them
 def checkBlankFields(recordDict):
+    
+    """
+    Checks for blank fields in a dict and prompts the user to fill them
+
+    Parameters:
+        recordDict (dict) : an individual recipient info
+
+    Returns:
+        recordDict (dict): a corrected or original dict of an individual recipient info
+    """
     
     #check each field (except for middle name)for blanks
     if (recordDict['first'] == '' or recordDict['first'] == ' ') or (recordDict['last'] == '' or recordDict['last'] == ' ') or (recordDict['degreeType'] == '' or recordDict['degreeType'] == ' ') or (recordDict['honorType'] == '' or recordDict['honorType'] == ' '):
         #print error message
+        print('\n---------- X Correction Needed ----------')
+        #enter loop
         #convert dict to str for print
         strRecord = convertRecordDictToStr(recordDict)
         print(f"\nThe record for '{strRecord}' is incomplete as one or more fields are empty.")
@@ -291,17 +397,26 @@ def checkBlankFields(recordDict):
       #honor type field
         while recordDict['honorType'] == '' or recordDict['honorType'] == ' ':
             #let the user correct the input
-            recordDict['honorType'] = input("Honors Earned: ")      
+            recordDict['honorType'] = input("Honors Earned: ")  
+        print('\n---------- ✓ Correction Accepted ----------\n')
  
     #exit input validation loops
-
 
     #return dict that has passed inspection / been updated
     return recordDict
 
 
-#checkNameCapitalization() - checks the first, middle, and last recipient dict keys for capitalization
 def checkNameCapitalization(recordDict):
+    
+    """
+    Checks the first, middle, and last recipient dict keys for capitalization
+
+    Parameters:
+        recordDict (dict) : an individual recipient info
+
+    Returns:
+        recordDict (dict): a corrected or original dict of an individual recipient info
+    """
     
     #validate name capitalization for
     # first, middle, and last
@@ -309,20 +424,23 @@ def checkNameCapitalization(recordDict):
     #check first, middle, and last dict keys
     if recordDict['first'][0].isupper() == False or (recordDict['middle'] != '' and recordDict['middle'][0].isupper() == False) or recordDict['last'][0].isupper() == False:
         #display error message
-        print(f'Error: {recordDict} has incorrect capitalization. Please correct the following:\n')
+        print('\n---------- X Correction Needed ----------')
+        invalidRecord = convertRecordDictToStr(recordDict)
+        print(f"'{invalidRecord}' has incorrect capitalization.\n\nPlease correct the following:")
         #enter loop
         #correct first name
         while recordDict['first'][0].isupper() == False:
             #let the user correct the input
-            recordDict['first'] = input(f'First Name | Currently: {recordDict['first']}\tCorrected: ')
+            recordDict['first'] = input(f'\nFirst Name\nCurrently: {recordDict['first']}\nCorrected: ')
             #correct middle name
         while recordDict['middle'] != '' and recordDict['middle'][0].isupper() == False:
             #let the user correct the input
-            recordDict['middle'] = input(f'Middle Name | Currently: {recordDict['middle']}\tCorrected: ')
+            recordDict['middle'] = input(f'\nMiddle Name\nCurrently: {recordDict['middle']}\nCorrected: ')
             #correct last name
         while recordDict['last'][0].isupper() == False:
             #let the user correct the input
-            recordDict['last'] = input(f'Last Name | Currently: {recordDict['last']}\tCorrected: ')
+            recordDict['last'] = input(f'\nLast Name\nCurrently: {recordDict['last']}\nCorrected: ')
+        print('\n---------- ✓ Correction Accepted ----------\n')
         
         #exit loops
         
@@ -330,35 +448,71 @@ def checkNameCapitalization(recordDict):
     return recordDict
 
 
-#validateDegreeTypes() - get recordDict from validateRecordDict() and checks for valid degree types
 def validateDegreeTypes(recordDict):
+    
+    """
+    Checks the degreeType dict keys for valid degrees
+
+    Parameters:
+        recordDict (dict) : an individual recipient info
+
+    Returns:
+        recordDict (dict): a corrected or original dict of an individual recipient info
+    """
+    
     #see if the recipeints degree type is in the recognized master list of degree types
     #if the degree type input is not in any of dict lists (which is why we use AND here), then we enter the loop
-  while recordDict['degreeType'] not in DEGREE_TYPE['Bachelor'] and recordDict['degreeType'] not in DEGREE_TYPE['Associate'] and recordDict['degreeType'] not in DEGREE_TYPE['Certificate']: 
-      print(f"{recordDict['degreeType']} is not currently offered at Eastern Arizona College.\n") 
-      print('Please choose one of the following:')
-      print('Bachelor:\t' + ', '.join(DEGREE_TYPE['Bachelor']))
-      print('Associate:\t' + ', '.join(DEGREE_TYPE['Associate']))
-      print('Certificate:\t' + ', '.join(DEGREE_TYPE['Certificate']))
-      print('')
-      recordDict['degreeType'] = input('Enter Degree Type: ')
-          
-  return recordDict
+    if recordDict['degreeType'] not in DEGREE_TYPE['Bachelor'] and recordDict['degreeType'] not in DEGREE_TYPE['Associate'] and recordDict['degreeType'] not in DEGREE_TYPE['Certificate']: 
+        while recordDict['degreeType'] not in DEGREE_TYPE['Bachelor'] and recordDict['degreeType'] not in DEGREE_TYPE['Associate'] and recordDict['degreeType'] not in DEGREE_TYPE['Certificate']: 
+            print('\n---------- X Correction Needed ----------')
+            invalidRecord = convertRecordDictToStr(recordDict)
+            print(f"Please correct the following for '{invalidRecord}':\n")
+            print(f"'{recordDict['degreeType']}' is not a degree currently offered at Eastern Arizona College.\n") 
+            print('Please choose one of the following:')
+            print('Bachelor:\t' + ', '.join(DEGREE_TYPE['Bachelor']))
+            print('Associate:\t' + ', '.join(DEGREE_TYPE['Associate']))
+            print('Certificate:\t' + ', '.join(DEGREE_TYPE['Certificate']))
+            print('')
+            recordDict['degreeType'] = input('Enter Degree: ')
+        if recordDict['degreeType'] in DEGREE_TYPE['Bachelor'] and recordDict['degreeType'] in DEGREE_TYPE['Associate'] and recordDict['degreeType'] in DEGREE_TYPE['Certificate']: 
+            print('\n---------- ✓ Correction Accepted ----------\n')       
+    return recordDict
 
-#validateHonorTypes() - checks for valid honor types
+
 def validateHonorTypes(recordDict):
+    
+    """
+    Checks the honorType dict keys for valid honor types
+
+    Parameters:
+        recordDict (dict) : an individual recipient info
+
+    Returns:
+        recordDict (dict): a corrected or original dict of an individual recipient info
+    """
+    
     #see if the recipeints honor type is in the recognized master list of degree types
     #if the degree type input is not in any of dict lists (which is why we use AND here), then we enter the loop
-  while recordDict['honorType'] not in HONOR_TYPE: 
+    while recordDict['honorType'] not in HONOR_TYPE: 
+      print('\n---------- X Correction Needed ----------')
       print(f"{recordDict['honorType']} is not a valid honor type.") 
       print(f'Please choose one of the following:\n{HONOR_TYPE}')
       recordDict['honorType'] = input('Update Honor Type: ')
           
-  return recordDict
+    return recordDict
 
 
-#formatList function - begins formatting and sorting by utilizing nested loops
 def formatList(records):
+    
+    """
+    Begins formatting and sorting the given input into a reformatted list by utilizing nested loops
+
+    Parameters:
+        records (list) : a list of dicts for each recipient
+
+    Returns:
+        formattedList (list): the final reformatted and sorted list
+    """
     
     #create an empty list
     formattedList =[]
@@ -411,8 +565,17 @@ def formatList(records):
     return formattedList
 
 
-#sortDegreeHeadings function - receive multiple degree types and produce a sorted list with no duplicates
 def getUniqueDegreeTypes(recipientList):
+    
+    """
+    Receive multiple degree types and produce a sorted list with no duplicates
+
+    Parameters:
+        recipientList (list) : a list of dicts for each recipient
+
+    Returns:
+        uniqueDegreeDict (dict): master dict list with unique degree types for each degree level
+    """
     
     #empty degree lists to be filled in through iteration
     certificates = []
@@ -459,8 +622,17 @@ def getUniqueDegreeTypes(recipientList):
     return uniqueDegreeDict
 
 
-#getFullDegreeHeading function - receive one degree type and convert it
 def getFullDegreeHeading(degreeType):
+    
+    """
+    Receive one degree type and convert it into the full proper degree heading
+    
+    Parameters:
+        degreeType (str): the degree type abbr
+
+    Returns:
+        heading(str): the full proper degree heading
+    """
 
     #bachelor's ['BA', 'BS']
     if degreeType == 'BA':
@@ -496,10 +668,19 @@ def getFullDegreeHeading(degreeType):
     else:
         print('Degree Type Not Recognized')
 
-#sortSDegreeRecipients - Sort recipients in a list by last name and then return the list
 def sortRecipientList(degreeRecipients):
     
-    #sort the recipients in the dictioanry list by last name
+    """
+    Sort recipients in a dict list alphabetically by last name and then return the list
+    
+    Parameters:
+        degreeRecipients (list):  a list of dicts for each recipient
+
+    Returns:
+        sortedDegreeRecipients (list): dict list sorted alphabetically by last name
+    """
+    
+    #sort the recipients in the dict list by last name
     sortedDegreeRecipients = sorted(degreeRecipients, key = lambda d: d['last'])
     
     return sortedDegreeRecipients
@@ -507,6 +688,16 @@ def sortRecipientList(degreeRecipients):
 
 #fullName function - concatenate first, middle, and last name together
 def getFullName(record):
+    
+    """
+    Concatenate first, middle, and last name together
+    
+    Parameters:
+        record (dict):  an individual recipeint's info
+
+    Returns:
+        fullName (str): recipient's full name
+    """
     
     #concatenate first, middle, and last name into a full name
     if record['middle'] == ' ':
@@ -519,6 +710,16 @@ def getFullName(record):
 
 #getHonorSymbol function - determine what honor symbol the recipient gets
 def getHonorSymbol(recipient):
+    
+    """
+    Determine what honor symbol the recipient gets
+    
+    Parameters:
+        recipient (dict): the info for an indicidual recipient
+
+    Returns:
+        honorType(str): Corresponding honor type symbol
+    """
     
     #find what honor symbol matches the given honor type
     
