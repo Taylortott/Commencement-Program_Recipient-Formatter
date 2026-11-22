@@ -1,9 +1,5 @@
 """
 
-Taylor Ellett
-
-11.21.2026
-
 Program to sort and format graduate recipients for a commencement program. 
 
 """
@@ -102,7 +98,7 @@ def displayMenu():
        choice (int): the option the user chose
    """
     
-    print('\nMENU SELECT')
+    print('\nMAIN MENU')
     print('-' * 25)
     print('1. Make a New Recipient List')
     print('2. End Program\n')
@@ -491,14 +487,19 @@ def validateHonorTypes(recordDict):
         recordDict (dict): a corrected or original dict of an individual recipient info
     """
     
-    #see if the recipeints honor type is in the recognized master list of degree types
-    #if the degree type input is not in any of dict lists (which is why we use AND here), then we enter the loop
-    while recordDict['honorType'] not in HONOR_TYPE: 
+    #see if the recipeints honor type is not in the recognized master list of degree types
+    if recordDict['honorType'] not in HONOR_TYPE:
       print('\n---------- X Correction Needed ----------')
-      print(f"{recordDict['honorType']} is not a valid honor type.") 
-      print(f'Please choose one of the following:\n{HONOR_TYPE}')
-      recordDict['honorType'] = input('Update Honor Type: ')
-          
+      while recordDict['honorType'] not in HONOR_TYPE: 
+          print(f"'{recordDict['honorType']}' is not a valid honor type.")
+          print('')
+          print('Please choose one of the following:\n')
+          for item in HONOR_TYPE:
+              print('- ' + item)
+          print('')
+          recordDict['honorType'] = input('Update Honor Type: ')
+      print('\n---------- ✓ Correction Accepted ----------\n')
+      
     return recordDict
 
 
@@ -686,7 +687,6 @@ def sortRecipientList(degreeRecipients):
     return sortedDegreeRecipients
 
 
-#fullName function - concatenate first, middle, and last name together
 def getFullName(record):
     
     """
@@ -708,7 +708,6 @@ def getFullName(record):
     return fullName
 
 
-#getHonorSymbol function - determine what honor symbol the recipient gets
 def getHonorSymbol(recipient):
     
     """
